@@ -3,13 +3,25 @@
   "extends": [
     "config:recommended",
     "docker:enableMajor",
-    "helpers:pinGitHubActionDigests",
-    "github>home-operations/renovate-config:autoMerge.json5",
-    "github>home-operations/renovate-config:labels.json5",
-    "github>home-operations/renovate-config:semanticCommits.json5",
+    "helpers:pinGitHubActionDigestsToSemver",
+    "github>phycoforce/renovate-config:annotated.json5",
+    "github>phycoforce/renovate-config:autoMerge.json5",
+    "github>phycoforce/renovate-config:labels.json5",
+    "github>phycoforce/renovate-config:semanticCommits.json5",
     ":automergeBranch",
     ":dependencyDashboard",
     ":disableRateLimiting"
   ],
-  "dependencyDashboardTitle": "Renovate Dashboard 🤖"
+  "dependencyDashboardTitle": "Renovate Dashboard 🤖",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 3am on the first day of the month"]
+  },
+  "packageRules": [
+    {
+      "description": "Bump the manifest range (package.json), not just the lockfile, so both update together. npm's default rangeStrategy ('replace') leaves a caret range untouched when the new version still satisfies it, so in-range minor/patch updates would otherwise only change the lockfile.",
+      "matchManagers": ["npm"],
+      "rangeStrategy": "bump"
+    }
+  ]
 }
